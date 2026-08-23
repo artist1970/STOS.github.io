@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STOS · Sovereign Terminal, Forge & AI Workbench</title>
+<meta name="description" content="STOS is a sovereign terminal, development, repository, learning, and AI-assisted systems environment.">
+<meta name="color-scheme" content="dark light">
+<style>
+:root{
+  --bg:#080b10;
+  --panel:#10151d;
+  --panel-2:#141b25;
+  --ink:#f5f7fb;
+  --muted:#a7b0be;
+  --line:#2a3442;
+  --accent:#b79cff;
+  --accent-2:#7f6bff;
+  --good:#89d9b7;
+  --shadow:0 20px 60px rgba(0,0,0,.28);
+}
+@media (prefers-color-scheme:light){
+  :root{
+    --bg:#f4f5f7;
+    --panel:#ffffff;
+    --panel-2:#f8f8fa;
+    --ink:#151922;
+    --muted:#5f6877;
+    --line:#d9dee7;
+    --accent:#7257c7;
+    --accent-2:#5a45b6;
+    --good:#287a5a;
+    --shadow:0 18px 50px rgba(28,33,43,.10);
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:
+    radial-gradient(circle at top,rgba(127,107,255,.14),transparent 34rem),
+    var(--bg);
+  color:var(--ink);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  line-height:1.6;
+}
+a{color:inherit}
+.shell{width:min(1111px,calc(100% - 32px));margin:0 auto}
+.topbar{
+  position:sticky;top:0;z-index:20;
+  backdrop-filter:blur(16px);
+  background:color-mix(in srgb,var(--bg) 82%,transparent);
+  border-bottom:1px solid var(--line);
+}
+.nav{
+  min-height:66px;
+  display:flex;align-items:center;justify-content:space-between;gap:18px;
+}
+.brand{
+  font-family:Georgia,"Times New Roman",serif;
+  letter-spacing:.14em;
+  font-size:1rem;
+  font-weight:700;
+  text-decoration:none;
+}
+.navlinks{display:flex;gap:18px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.navlinks a{font-size:.9rem;text-decoration:none;color:var(--muted)}
+.navlinks a:hover{color:var(--ink)}
+
+.hero{
+  min-height:calc(100vh - 66px);
+  display:grid;place-items:center;
+  padding:88px 0;
+  text-align:center;
+}
+.hero-inner{max-width:900px}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:9px;
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:8px 13px;
+  color:var(--muted);
+  font-size:.78rem;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  background:color-mix(in srgb,var(--panel) 82%,transparent);
+}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--good);box-shadow:0 0 18px var(--good)}
+h1{
+  margin:28px 0 16px;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(3.2rem,10vw,7.8rem);
+  line-height:.9;
+  letter-spacing:.02em;
+  font-weight:500;
+}
+.hero p{
+  max-width:800px;
+  margin:0 auto;
+  color:var(--muted);
+  font-size:clamp(1rem,2.2vw,1.25rem);
+}
+.actions{margin-top:32px;display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:180px;
+  padding:12px 18px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  text-decoration:none;
+  font-weight:650;
+  background:var(--panel);
+}
+.btn.primary{
+  background:linear-gradient(135deg,var(--accent-2),var(--accent));
+  color:white;
+  border-color:transparent;
+}
+.btn.disabled{opacity:.55;cursor:not-allowed}
+
+.section{padding:88px 0;border-top:1px solid var(--line)}
+.section-head{max-width:780px;margin-bottom:32px}
+.kicker{
+  color:var(--accent);
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  font-size:.76rem;
+  font-weight:700;
+}
+h2{
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(2rem,5vw,4rem);
+  line-height:1;
+  margin:8px 0 14px;
+  font-weight:500;
+}
+.section-head p{color:var(--muted);margin:0}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+}
+.card{
+  border:1px solid var(--line);
+  background:linear-gradient(180deg,var(--panel),var(--panel-2));
+  border-radius:14px;
+  padding:24px;
+  box-shadow:var(--shadow);
+}
+.card h3{margin:0 0 8px;font-size:1.04rem}
+.card p{margin:0;color:var(--muted);font-size:.92rem}
+.card .mini{
+  margin-top:13px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+}
+.badge{
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:5px 9px;
+  color:var(--muted);
+  font-size:.76rem;
+}
+
+.diagram{
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:var(--panel);
+  padding:24px;
+  overflow:auto;
+}
+pre{
+  margin:0;
+  color:var(--muted);
+  font:600 .9rem/1.75 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+.principle{
+  margin-top:28px;
+  padding:28px;
+  border-left:4px solid var(--accent);
+  background:var(--panel);
+  border-radius:0 12px 12px 0;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(1.25rem,3vw,2rem);
+}
+.download-box{
+  display:grid;
+  grid-template-columns:1.4fr .6fr;
+  gap:20px;
+  align-items:center;
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:26px;
+  background:linear-gradient(135deg,var(--panel),var(--panel-2));
+}
+.download-box p{color:var(--muted);margin:6px 0 0}
+.status{text-align:right;color:var(--muted);font-size:.9rem}
+footer{
+  padding:40px 0 56px;
+  border-top:1px solid var(--line);
+  color:var(--muted);
+  font-size:.84rem;
+}
+.footer-row{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+
+@media(max-width:820px){
+  .grid{grid-template-columns:1fr}
+  .download-box{grid-template-columns:1fr}
+  .status{text-align:left}
+  .nav{align-items:flex-start;padding:14px 0}
+  .navlinks{gap:12px}
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="shell nav">
+    <a class="brand" href="#top">STOS</a>
+    <nav class="navlinks" aria-label="Primary">
+      <a href="#about">About</a>
+      <a href="#pillars">Pillars</a>
+      <a href="#architecture">Architecture</a>
+      <a href="#academy">Academy</a>
+      <a href="#download">Download</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="shell hero-inner">
+      <div class="eyebrow"><span class="dot"></span> Public Information Portal</div>
+      <h1>STOS</h1>
+      <p>
+        A sovereign terminal, development, repository, learning, and AI-assisted systems environment —
+        designed to help people build, understand, operate, and learn from real computing systems while
+        keeping sensitive authority behind clear security boundaries.
+      </p>
+      <div class="actions">
+        <a class="btn primary" href="#about">Explore STOS</a>
+        <a class="btn" href="#download">Future Download</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="about">
+    <div class="shell">
+      <div class="section-head">
+        <div class="kicker">What it is</div>
+        <h2>A workbench for sovereign computing.</h2>
+        <p>
+          STOS brings terminal work, repositories, search, guided diagnostics, coding education,
+          and AI-assisted operations into one coherent workspace. The public page describes the
+          platform without exposing protected internals, credentials, private infrastructure, or
+          sensitive security implementation.
+        </p>
+      </div>
+
+      <div class="principle">
+        Build openly where possible. Protect authority where necessary.
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="pillars">
+    <div class="shell">
+      <div class="section-head">
+        <div class="kicker">Four public pillars</div>
+        <h2>One environment, several disciplines.</h2>
+        <p>
+          STOS is being developed as more than a terminal UI. Its major public-facing parts are meant
+          to work together as a unified development and learning platform.
+        </p>
+      </div>
+
+      <div class="grid">
+        <article class="card">
+          <h3>STOS Workbench</h3>
+          <p>
+            A dynamic terminal workspace with persistent sessions, terminal tabs, searchable history,
+            repository context, print-ready records, protected terminals, and adaptable layouts.
+          </p>
+          <div class="mini">
+            <span class="badge">Terminals</span>
+            <span class="badge">Search</span>
+            <span class="badge">Diagnostics</span>
+            <span class="badge">Device-aware</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>Sovereign Forge</h3>
+          <p>
+            A Git-based internal forge for repositories, version history, branches, issues,
+            pull requests, reviews, releases, and future local automation.
+          </p>
+          <div class="mini">
+            <span class="badge">Git</span>
+            <span class="badge">Branches</span>
+            <span class="badge">Pull Requests</span>
+            <span class="badge">Issues</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>STOS AI</h3>
+          <p>
+            A policy-aware guide for commissioning, coding, debugging, technical explanation,
+            guided workflows, and safe recommendations. Sensitive actions remain subject to
+            authentication, authorization, policy, and human approval.
+          </p>
+          <div class="mini">
+            <span class="badge">Guide Mode</span>
+            <span class="badge">Operator Mode</span>
+            <span class="badge">Diagnostics</span>
+            <span class="badge">Human approval</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>Khaemenes Academy</h3>
+          <p>
+            A coding and systems learning environment designed around real tools, isolated student
+            workspaces, repositories, guided terminals, assignments, progressive hints, and authentic
+            development workflows.
+          </p>
+          <div class="mini">
+            <span class="badge">Coding Labs</span>
+            <span class="badge">Mentor Guidance</span>
+            <span class="badge">Real Git</span>
+            <span class="badge">Isolated Learning</span>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="architecture">
+    <div class="shell">
+      <div class="section-head">
+        <div class="kicker">Public architecture</div>
+        <h2>Separate the interface from the authority.</h2>
+        <p>
+          STOS is designed so the public-facing workbench can explain and assist without exposing
+          protected CORE logic, secret values, production credentials, or private operational topology.
+        </p>
+      </div>
+
+      <div class="diagram" aria-label="STOS public architecture">
+<pre>PERSON
+  │
+  ▼
+STOS WORKBENCH
+  ├── terminal workspace
+  ├── universal search
+  ├── repository context
+  ├── Sovereign Forge
+  └── Academy learning
+  │
+  ▼
+STOS AI / POLICY-AWARE GUIDANCE
+  │
+  ▼
+CONTROLLED LOCAL SYSTEM INTERFACES
+  ├── runtime services
+  ├── repositories
+  ├── learning environments
+  └── protected diagnostic / security engines
+
+Sensitive operations remain governed by authentication,
+authorization, policy, and human approval.</pre>
+      </div>
+
+      <div class="mini" style="margin-top:18px">
+        <span class="badge">No public secrets</span>
+        <span class="badge">No browser-side private CORE</span>
+        <span class="badge">Evidence before assumption</span>
+        <span class="badge">Human authority preserved</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="academy">
+    <div class="shell">
+      <div class="section-head">
+        <div class="kicker">Khaemenes Academy</div>
+        <h2>Learn on the same kind of tools professionals use.</h2>
+        <p>
+          STOS is being designed to support coding and systems education through isolated learning
+          environments that preserve real terminal, repository, debugging, and review workflows.
+        </p>
+      </div>
+
+      <div class="grid">
+        <article class="card">
+          <h3>Beginner</h3>
+          <p>One step at a time, explanations of commands, expected results, and accessible hints.</p>
+        </article>
+        <article class="card">
+          <h3>Intermediate</h3>
+          <p>Objectives and constraints first, with hints available when requested.</p>
+        </article>
+        <article class="card">
+          <h3>Advanced</h3>
+          <p>Real debugging, Git, project, and systems problems with reduced scaffolding.</p>
+        </article>
+        <article class="card">
+          <h3>Operator</h3>
+          <p>Realistic operational and recovery scenarios inside isolated environments without production credentials.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="download">
+    <div class="shell">
+      <div class="download-box">
+        <div>
+          <div class="kicker">Future Distribution</div>
+          <h2 style="font-size:clamp(1.8rem,4vw,3rem);margin-bottom:8px">STOS download center</h2>
+          <p>
+            Public packages are not yet released. When STOS is ready for distribution, this page can
+            become the trusted location for platform downloads, installation guides, release notes,
+            checksums, signatures, compatibility information, and public security notices.
+          </p>
+          <div class="actions" style="justify-content:flex-start;margin-top:20px">
+            <span class="btn disabled" aria-disabled="true">Coming Later</span>
+          </div>
+        </div>
+        <div class="status">
+          <strong style="color:var(--ink)">Development status</strong><br>
+          Active architecture and commissioning work.<br>
+          No public runtime download yet.
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="shell footer-row">
+    <div>
+      <strong style="color:var(--ink)">STOS</strong><br>
+      Sovereign terminal, forge, AI, and learning environment.
+    </div>
+    <div>
+      Public-facing information only.<br>
+      Protected internals are intentionally not published here.
+    </div>
+  </div>
+</footer>
+</body>
+</html>
