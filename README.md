@@ -1,1 +1,1 @@
-# STOS.github.io
+# STOSCore.github.io
